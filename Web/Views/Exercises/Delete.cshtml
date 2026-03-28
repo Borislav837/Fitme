@@ -1,0 +1,12 @@
+@model Exercise
+
+<div class="alert alert-danger mt-3">
+    <h3>Изтриване на упражнение?</h3>
+    <p>Сигурни ли сте, че искате да премахнете <strong>@Model.Name</strong> от библиотеката?</p>
+    
+    <form asp-action="DeleteConfirmed">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Да, изтрий</button>
+        <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+    </form>
+</div>
