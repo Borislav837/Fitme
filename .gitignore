@@ -1,0 +1,15 @@
+[Dd]ebug/
+[Rr]elease/
+bin/
+obj/
+
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+packages/
+*.nupkg
+
+appsettings.Development.json
