@@ -9,4 +9,8 @@ public class AppDbContext : DbContext
 
     public DbSet<Category> Categories { get; set; }
     public DbSet<Exercise> Exercises { get; set; }
+    
+    public DbSet<Workout> Workouts { get; set; }
+    
+    public DbSet<WorkoutLog> WorkoutLogs { get; set; }
 }

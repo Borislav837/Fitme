@@ -1,0 +1,42 @@
+@model Workout
+
+<h4>Редактиране: @Model.Name</h4>
+
+<form asp-action="EditWorkoutHeader">
+    <input type="hidden" asp-for="Id" />
+    <div class="row mb-4">
+        <div class="col"><input asp-for="Name" class="form-control" /></div>
+        <div class="col"><input asp-for="Date" type="date" class="form-control" /></div>
+        <div class="col"><button class="btn btn-primary">Обнови</button></div>
+    </div>
+</form>
+
+<h5>Упражнения в тази тренировка</h5>
+<table class="table">
+    @foreach (var log in Model.WorkoutLogs)
+    {
+        <tr>
+            <td>@log.Exercise.Name</td>
+            <td>@log.Sets х @log.Reps (@log.Weight кг)</td>
+            <td class="text-end">
+                <a asp-action="DeleteLog" asp-route-id="@log.Id" class="btn btn-sm btn-outline-danger">&#10005;</a>
+            </td>
+        </tr>
+    }
+</table>
+
+<div class="card bg-light p-3 mt-3">
+    <h5>Добави упражнение</h5>
+    <form asp-action="AddLog">
+        <input type="hidden" name="WorkoutId" value="@Model.Id" />
+        <div class="row">
+            <div class="col-4">
+                <select name="ExerciseId" class="form-select" asp-items="ViewBag.ExerciseId"></select>
+            </div>
+            <div class="col-2"><input name="Sets" placeholder="Серии" class="form-control" /></div>
+            <div class="col-2"><input name="Reps" placeholder="Повторения" class="form-control" /></div>
+            <div class="col-2"><input name="Weight" placeholder="кг" class="form-control" /></div>
+            <div class="col-2"><button class="btn btn-primary">Добави</button></div>
+        </div>
+    </form>
+</div>

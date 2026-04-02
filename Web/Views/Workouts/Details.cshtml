@@ -1,0 +1,38 @@
+@model Web.Models.Workout
+
+<div class="container">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>@Model.Name</h4>
+            <p class="mb-0">Дата: @Model.Date.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("bg-BG"))
+            </p>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Упражнение</th>
+                        <th>Серии</th>
+                        <th>Повторения</th>
+                        <th>Тежест (кг)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in Model.WorkoutLogs)
+                    {
+                        <tr>
+                            <td>@log.Exercise.Name</td>
+                            <td>@log.Sets</td>
+                            <td>@log.Reps</td>
+                            <td>@(log.Weight > 0 ? log.Weight + " кг" : "-")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-success">Редактирай</a>
+            <a asp-action="Index" class="btn btn-secondary">Назад към списъка</a>
+        </div>
+    </div>
+</div>
