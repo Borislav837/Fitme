@@ -32,7 +32,6 @@ public class ExercisesController : Controller
 
     // CREATE: Save to DB
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Exercise exercise)
     {
         if (ModelState.IsValid)

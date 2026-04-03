@@ -109,7 +109,6 @@ public class WorkoutsController : Controller
 
     
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var workout = await _db.Workouts
