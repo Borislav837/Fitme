@@ -8,15 +8,15 @@ namespace Web.Controllers;
 
 public class WorkoutsController : Controller
 {
-    private readonly AppDbContext _context;
+    private readonly AppDbContext _db;
 
-    public WorkoutsController(AppDbContext context) => _context = context;
+    public WorkoutsController(AppDbContext db) => _db = db;
 
     // GET: Workouts
     public async Task<IActionResult> Index()
     {
         // .Include and .ThenInclude are vital for relational data!
-        var workouts = await _context.Workouts
+        var workouts = await _db.Workouts
             .Include(w => w.WorkoutLogs)
             .ThenInclude(log => log.Exercise)
             .OrderByDescending(w => w.Date)
@@ -29,7 +29,7 @@ public class WorkoutsController : Controller
     {
         if (id == null) return NotFound();
 
-        var workout = await _context.Workouts
+        var workout = await _db.Workouts
             .Include(w => w.WorkoutLogs)
             .ThenInclude(l => l.Exercise) // Join to get Bulgarian Names
             .FirstOrDefaultAsync(m => m.Id == id);
@@ -50,8 +50,8 @@ public class WorkoutsController : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.Add(workout);
-            await _context.SaveChangesAsync();
+            _db.Add(workout);
+            await _db.SaveChangesAsync();
             // Redirect to the Edit page to add logs
             return RedirectToAction(nameof(Edit), new { id = workout.Id });
         }
@@ -60,11 +60,11 @@ public class WorkoutsController : Controller
     
     public async Task<IActionResult> Edit(int id)
     {
-        var workout = await _context.Workouts
+        var workout = await _db.Workouts
             .Include(w => w.WorkoutLogs).ThenInclude(l => l.Exercise)
             .FirstOrDefaultAsync(w => w.Id == id);
 
-        ViewBag.ExerciseId = new SelectList(_context.Exercises, "Id", "Name");
+        ViewBag.ExerciseId = new SelectList(_db.Exercises, "Id", "Name");
         return View(workout);
     }
     
@@ -74,7 +74,7 @@ public class WorkoutsController : Controller
         if (ModelState.IsValid)
         {
             // 1. Find the existing workout in the database
-            var existingWorkout = await _context.Workouts.FindAsync(workout.Id);
+            var existingWorkout = await _db.Workouts.FindAsync(workout.Id);
         
             if (existingWorkout == null) return NotFound();
 
@@ -83,8 +83,8 @@ public class WorkoutsController : Controller
             existingWorkout.Date = workout.Date;
 
             // 3. Save changes
-            _context.Update(existingWorkout);
-            await _context.SaveChangesAsync();
+            _db.Update(existingWorkout);
+            await _db.SaveChangesAsync();
 
             // 4. Stay on the Edit page to allow adding logs
             return RedirectToAction(nameof(Edit), new { id = workout.Id });
@@ -99,7 +99,7 @@ public class WorkoutsController : Controller
     {
         if (id == null) return NotFound();
 
-        var workout = await _context.Workouts
+        var workout = await _db.Workouts
             .FirstOrDefaultAsync(m => m.Id == id);
 
         if (workout == null) return NotFound();
@@ -112,35 +112,35 @@ public class WorkoutsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var workout = await _context.Workouts
+        var workout = await _db.Workouts
             .Include(w => w.WorkoutLogs) // Crucial: Include logs to remove them too
             .FirstOrDefaultAsync(m => m.Id == id);
 
         if (workout != null)
         {
             // Remove the logs first, then the workout
-            _context.WorkoutLogs.RemoveRange(workout.WorkoutLogs);
-            _context.Workouts.Remove(workout);
+            _db.WorkoutLogs.RemoveRange(workout.WorkoutLogs);
+            _db.Workouts.Remove(workout);
         }
 
-        await _context.SaveChangesAsync();
+        await _db.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
     public async Task<IActionResult> AddLog(WorkoutLog log)
     {
-        _context.WorkoutLogs.Add(log);
-        await _context.SaveChangesAsync();
+        _db.WorkoutLogs.Add(log);
+        await _db.SaveChangesAsync();
         return RedirectToAction(nameof(Edit), new { id = log.WorkoutId });
     }
 
     public async Task<IActionResult> DeleteLog(int id)
     {
-        var log = await _context.WorkoutLogs.FindAsync(id);
+        var log = await _db.WorkoutLogs.FindAsync(id);
         int? workoutId = log.WorkoutId;
-        _context.WorkoutLogs.Remove(log);
-        await _context.SaveChangesAsync();
+        _db.WorkoutLogs.Remove(log);
+        await _db.SaveChangesAsync();
         return RedirectToAction(nameof(Edit), new { id = workoutId });
     }
 

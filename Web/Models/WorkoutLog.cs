@@ -16,5 +16,7 @@ public class WorkoutLog
 
     // Navigation Properties
     [ValidateNever] 
+    public Workout Workout { get; set; }
+    [ValidateNever] 
     public Exercise Exercise { get; set; }
 }
