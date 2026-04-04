@@ -7,7 +7,6 @@ public class WorkoutLog
 {
     public int Id { get; set; }
     public int? WorkoutId { get; set; }
-    [Required(ErrorMessage = "Моля, изберете упражнение!")]
     public int? ExerciseId { get; set; }
     
     public int? Sets { get; set; }

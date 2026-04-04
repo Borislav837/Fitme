@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Web.Models;
@@ -5,6 +6,7 @@ namespace Web.Models;
 public class Workout
 {
     public int Id { get; set; }
+    [Required(ErrorMessage = "Моля, въведете име!")]
     public string Name { get; set; } // e.g., "Януарска Сила"
     public DateTime Date { get; set; }
     
